@@ -459,6 +459,7 @@
     }
 
     const urls = [];
+    const seenUrls = new Set();
     for (const card of cards) {
       const urlInput = card.querySelector(".url-input");
       const url = urlInput.value.trim();
@@ -474,11 +475,17 @@
         focusInvalid(urlInput);
         return;
       }
+      if (seenUrls.has(url)) {
+        showToast("중복된 SNS URL을 입력하셨습니다.", "error");
+        focusInvalid(urlInput);
+        return;
+      }
       if (checked.length === 0) {
         showToast("노출된 컨텐츠를 1개 이상 선택해주세요.", "error");
         focusInvalid(urlInput);
         return;
       }
+      seenUrls.add(url);
       const contents = Array.from(checked).map(cb => ({
         category: cb.dataset.category, item: cb.value
       }));
