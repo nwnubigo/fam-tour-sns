@@ -167,6 +167,7 @@ function getOrCreateSheet() {
     sheet = ss.insertSheet(SHEET_NAME);
     sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
     formatHeader(sheet);
+    enforcePasswordTextFormat(sheet);
     return sheet;
   }
   // 기존 시트 — password 컬럼 없으면 추가 (마이그레이션)
@@ -176,6 +177,7 @@ function getOrCreateSheet() {
     sheet.getRange(1, 8).setValue("password");
     formatHeader(sheet);
   }
+  enforcePasswordTextFormat(sheet);
   return sheet;
 }
 
@@ -187,6 +189,17 @@ function formatHeader(sheet) {
   sheet.setFrozenRows(1);
   const widths = [240, 160, 100, 280, 130, 160, 90, 200];
   widths.forEach((w, i) => sheet.setColumnWidth(i + 1, w));
+}
+
+/**
+ * H열(password) 을 평문 텍스트로 강제 — Sheets 의 자동 변환을 막음
+ *   - "0123" → 앞 0 유지
+ *   - "=ABC" → 수식으로 해석되지 않고 리터럴로 저장
+ *   - "1-2-3" → 날짜로 변환되지 않음
+ *   - 큰 숫자 → 지수 표기 안 됨
+ */
+function enforcePasswordTextFormat(sheet) {
+  sheet.getRange("H:H").setNumberFormat("@");
 }
 
 function jsonResponse(obj) {
