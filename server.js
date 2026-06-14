@@ -19,10 +19,9 @@ const crypto = require("crypto");
 const PORT = 3000;
 const ROOT = __dirname;
 const DATA_FILE = path.join(ROOT, "data.csv");
-const PASSWORD_PEPPER = "fam-tour-2026-rural";  // Code.gs 와 동일해야 함
 const HEADERS = [
   "submission_id","timestamp","name","sns_url",
-  "category","content_item","view_count","password_hash"
+  "category","content_item","view_count","password"
 ];
 
 function ensureCsv() {
@@ -30,12 +29,12 @@ function ensureCsv() {
     fs.writeFileSync(DATA_FILE, "﻿" + HEADERS.join(",") + "\n", "utf8");
     return;
   }
-  // 마이그레이션: 헤더에 password_hash 가 없으면 컬럼 추가
+  // 마이그레이션: 헤더에 password 가 없으면 컬럼 추가
   const text = fs.readFileSync(DATA_FILE, "utf8").replace(/^﻿/, "");
   const lines = text.split(/\r?\n/);
   if (lines.length === 0) return;
   const header = parseCsvLine(lines[0]);
-  if (header.length < 8 || header[7] !== "password_hash") {
+  if (header.length < 8 || header[7] !== "password") {
     const newLines = [HEADERS.join(",")];
     for (let i = 1; i < lines.length; i++) {
       if (!lines[i]) continue;
@@ -91,11 +90,7 @@ function writeAllRows(rows) {
   fs.writeFileSync(DATA_FILE, "﻿" + lines.join("\n") + "\n", "utf8");
 }
 
-function hashPassword(pw) {
-  return crypto.createHash("sha256").update(PASSWORD_PEPPER + pw, "utf8").digest("hex");
-}
-
-function buildRows(submissionId, timestamp, name, urls, pwHash) {
+function buildRows(submissionId, timestamp, name, urls, password) {
   const rows = [];
   urls.forEach(entry => {
     const url = (entry.url || "").toString().trim();
@@ -106,7 +101,7 @@ function buildRows(submissionId, timestamp, name, urls, pwHash) {
         submissionId, timestamp, name, url,
         c.category || "", c.item || "",
         String(Number(c.view_count) || 0),
-        pwHash
+        password
       ]);
     });
   });
@@ -125,7 +120,7 @@ function actionSubmit(payload) {
 
   const submissionId = crypto.randomUUID();
   const timestamp = new Date().toISOString();
-  const rows = buildRows(submissionId, timestamp, name, urls, hashPassword(password));
+  const rows = buildRows(submissionId, timestamp, name, urls, password);
   if (rows.length === 0) return { success: false, error: "유효한 데이터가 없습니다." };
 
   ensureCsv();
@@ -137,9 +132,8 @@ function actionLookup(payload) {
   const name = (payload.name || "").toString().trim();
   const password = (payload.password || "").toString();
   if (!name || !password) return { success: false, error: "이름과 비밀번호를 입력하세요." };
-  const pwHash = hashPassword(password);
   const { rows } = readData();
-  const matched = rows.filter(r => r[2] === name && r[7] === pwHash);
+  const matched = rows.filter(r => r[2] === name && String(r[7]) === password);
   if (matched.length === 0) return { success: false, error: "이름 또는 비밀번호가 일치하지 않습니다." };
   const byUrl = new Map();
   matched.forEach(r => {
@@ -159,18 +153,17 @@ function actionUpdate(payload) {
   const password = (payload.password || "").toString();
   const urls = Array.isArray(payload.urls) ? payload.urls : [];
   if (!name || !password) return { success: false, error: "이름과 비밀번호를 입력하세요." };
-  const pwHash = hashPassword(password);
   const { rows } = readData();
   const keep = [], removed = [];
   rows.forEach(r => {
-    if (r[2] === name && r[7] === pwHash) removed.push(r);
+    if (r[2] === name && String(r[7]) === password) removed.push(r);
     else keep.push(r);
   });
   if (removed.length === 0) return { success: false, error: "이름 또는 비밀번호가 일치하지 않습니다." };
   let submissionId = null, inserted = 0;
   if (urls.length > 0) {
     submissionId = crypto.randomUUID();
-    const newRows = buildRows(submissionId, new Date().toISOString(), name, urls, pwHash);
+    const newRows = buildRows(submissionId, new Date().toISOString(), name, urls, password);
     inserted = newRows.length;
     keep.push(...newRows);
   }

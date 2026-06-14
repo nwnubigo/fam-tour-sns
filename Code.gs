@@ -6,7 +6,7 @@
  *   action: "update"  → 이름+비밀번호 일치 시 기존 행 삭제 후 새 데이터 추가
  *
  * [DB 스키마]
- *   submission_id | timestamp | name | sns_url | category | content_item | view_count | password_hash
+ *   submission_id | timestamp | name | sns_url | category | content_item | view_count | password
  *   (한 행 = 1개 게시물 × 1개 노출컨텐츠)
  *
  * [재배포] 코드 수정 후 반드시 [배포 > 배포 관리 > 편집(✏️) > 새 버전 > 배포] 필요.
@@ -21,10 +21,8 @@ const HEADERS = [
   "category",
   "content_item",
   "view_count",
-  "password_hash"
+  "password"
 ];
-const PASSWORD_PEPPER = "fam-tour-2026-rural";  // 비밀번호 해시 시 결합되는 상수
-
 function doPost(e) {
   try {
     const payload = JSON.parse(e.postData.contents);
@@ -56,9 +54,8 @@ function handleSubmit(payload) {
   const sheet = getOrCreateSheet();
   const submissionId = Utilities.getUuid();
   const timestamp = new Date();
-  const pwHash = hashPassword(password);
 
-  const rows = buildRows(submissionId, timestamp, name, urls, pwHash);
+  const rows = buildRows(submissionId, timestamp, name, urls, password);
   if (rows.length === 0) return jsonResponse({ success: false, error: "유효한 데이터가 없습니다." });
 
   sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, HEADERS.length).setValues(rows);
@@ -70,13 +67,12 @@ function handleLookup(payload) {
   const password = (payload.password || "").toString();
   if (!name || !password) return jsonResponse({ success: false, error: "이름과 비밀번호를 입력하세요." });
 
-  const pwHash = hashPassword(password);
   const sheet = getOrCreateSheet();
   const last = sheet.getLastRow();
   if (last < 2) return jsonResponse({ success: false, error: "등록된 데이터가 없습니다." });
 
   const data = sheet.getRange(2, 1, last - 1, HEADERS.length).getValues();
-  const matched = data.filter(r => r[2] === name && r[7] === pwHash);
+  const matched = data.filter(r => r[2] === name && String(r[7]) === password);
   if (matched.length === 0) {
     return jsonResponse({ success: false, error: "이름 또는 비밀번호가 일치하지 않습니다." });
   }
@@ -102,7 +98,6 @@ function handleUpdate(payload) {
 
   if (!name || !password) return jsonResponse({ success: false, error: "이름과 비밀번호를 입력하세요." });
 
-  const pwHash = hashPassword(password);
   const sheet = getOrCreateSheet();
   const last = sheet.getLastRow();
   if (last < 2) return jsonResponse({ success: false, error: "삭제할 데이터가 없습니다." });
@@ -111,7 +106,7 @@ function handleUpdate(payload) {
   // 일치하는 행 인덱스 (시트의 1-indexed 행 번호) 수집
   const rowsToDelete = [];
   data.forEach((r, i) => {
-    if (r[2] === name && r[7] === pwHash) rowsToDelete.push(i + 2);
+    if (r[2] === name && String(r[7]) === password) rowsToDelete.push(i + 2);
   });
 
   if (rowsToDelete.length === 0) {
@@ -126,7 +121,7 @@ function handleUpdate(payload) {
   let submissionId = null;
   if (urls.length > 0) {
     submissionId = Utilities.getUuid();
-    const newRows = buildRows(submissionId, new Date(), name, urls, pwHash);
+    const newRows = buildRows(submissionId, new Date(), name, urls, password);
     if (newRows.length > 0) {
       sheet.getRange(sheet.getLastRow() + 1, 1, newRows.length, HEADERS.length).setValues(newRows);
       inserted = newRows.length;
@@ -143,7 +138,7 @@ function handleUpdate(payload) {
 
 /* ---------- 유틸 ---------- */
 
-function buildRows(submissionId, timestamp, name, urls, pwHash) {
+function buildRows(submissionId, timestamp, name, urls, password) {
   const rows = [];
   urls.forEach(entry => {
     const url = (entry.url || "").toString().trim();
@@ -158,20 +153,11 @@ function buildRows(submissionId, timestamp, name, urls, pwHash) {
         c.category || "",
         c.item || "",
         Number(c.view_count) || 0,
-        pwHash
+        password
       ]);
     });
   });
   return rows;
-}
-
-function hashPassword(pw) {
-  const raw = Utilities.computeDigest(
-    Utilities.DigestAlgorithm.SHA_256,
-    PASSWORD_PEPPER + pw,
-    Utilities.Charset.UTF_8
-  );
-  return raw.map(b => ("0" + (b & 0xff).toString(16)).slice(-2)).join("");
 }
 
 function getOrCreateSheet() {
@@ -183,11 +169,11 @@ function getOrCreateSheet() {
     formatHeader(sheet);
     return sheet;
   }
-  // 기존 시트 — password_hash 컬럼 없으면 추가 (마이그레이션)
+  // 기존 시트 — password 컬럼 없으면 추가 (마이그레이션)
   const lastCol = sheet.getLastColumn();
   const existing = sheet.getRange(1, 1, 1, Math.max(lastCol, HEADERS.length)).getValues()[0];
-  if (existing[7] !== "password_hash") {
-    sheet.getRange(1, 8).setValue("password_hash");
+  if (existing[7] !== "password") {
+    sheet.getRange(1, 8).setValue("password");
     formatHeader(sheet);
   }
   return sheet;
