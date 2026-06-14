@@ -4,71 +4,50 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#2d7a3e">
-<title>농촌관광 팸투어 SNS 홍보글 등록</title>
+<title>등록 내역 조회·수정 — 농촌관광 팸투어</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    background: #f3f6f2;
-    color: #1f2d1f;
-    font-size: 16px;
-    line-height: 1.45;
+    background: #f3f6f2; color: #1f2d1f;
+    font-size: 16px; line-height: 1.45;
     padding-bottom: env(safe-area-inset-bottom);
   }
   .container { max-width: 640px; margin: 0 auto; padding: 16px; }
 
   header {
     background: linear-gradient(135deg, #2d7a3e 0%, #3a9c4e 100%);
-    color: #fff;
-    padding: 22px 18px;
-    border-radius: 14px;
-    margin-bottom: 14px;
+    color: #fff; padding: 22px 18px;
+    border-radius: 14px; margin-bottom: 14px;
     box-shadow: 0 4px 12px rgba(45, 122, 62, 0.18);
   }
   header h1 { margin: 0; font-size: 1.22rem; font-weight: 700; line-height: 1.4; }
   header p { margin: 6px 0 12px; font-size: 0.85rem; opacity: 0.92; }
   .header-nav { display: flex; gap: 8px; flex-wrap: wrap; }
   .header-link {
-    display: inline-block;
-    background: rgba(255,255,255,0.18);
-    color: #fff;
-    text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border: 1px solid rgba(255,255,255,0.25);
+    display: inline-block; background: rgba(255,255,255,0.18); color: #fff;
+    text-decoration: none; padding: 8px 12px; border-radius: 8px;
+    font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.25);
   }
   .header-link:active { background: rgba(255,255,255,0.3); }
 
   section.card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 14px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    background: #fff; border-radius: 12px; padding: 16px;
+    margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   }
-  section.card > label.field-label,
-  .auth-row label.field-label {
-    display: block;
-    font-weight: 600;
-    font-size: 0.95rem;
-    margin-bottom: 8px;
-    color: #2d7a3e;
+  .field-label {
+    display: block; font-weight: 600; font-size: 0.95rem;
+    margin-bottom: 8px; color: #2d7a3e;
   }
-
   .auth-row { margin-bottom: 12px; }
   .auth-row:last-of-type { margin-bottom: 0; }
   .auth-hint { font-size: 0.78rem; color: #5a6b5a; margin: 10px 0 0; line-height: 1.4; }
 
   input[type="text"], input[type="url"], input[type="number"], input[type="password"] {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid #d4dcd4;
-    border-radius: 10px;
-    font-size: 1rem;
-    background: #fafdfa;
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid #d4dcd4; border-radius: 10px;
+    font-size: 1rem; background: #fafdfa;
     transition: border-color 0.15s, background 0.15s;
     -webkit-appearance: none;
   }
@@ -76,31 +55,23 @@
   input.invalid { border-color: #c8493d; background: #fdf3f1; }
 
   .add-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 14px;
-    background: #eaf3eb;
-    padding: 12px;
-    border-radius: 10px;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 14px; background: #eaf3eb;
+    padding: 12px; border-radius: 10px;
   }
   .add-controls label { font-size: 0.9rem; font-weight: 600; color: #2d7a3e; white-space: nowrap; }
   .add-controls input[type="number"] {
     width: 70px; flex: 0 0 auto; text-align: center; padding: 10px 6px;
   }
   .add-controls button {
-    flex: 1; padding: 11px;
-    background: #2d7a3e; color: #fff; border: none; border-radius: 8px;
-    font-weight: 600; font-size: 0.95rem; cursor: pointer;
+    flex: 1; padding: 11px; background: #2d7a3e; color: #fff;
+    border: none; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer;
   }
   .add-controls button:active { background: #246234; }
 
   .url-card {
-    background: #fff;
-    border: 1.5px solid #e0e7e0;
-    border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 12px;
+    background: #fff; border: 1.5px solid #e0e7e0;
+    border-radius: 12px; padding: 14px; margin-bottom: 12px;
     scroll-margin-top: 80px;
   }
   .url-card.invalid { border-color: #c8493d; box-shadow: 0 0 0 3px rgba(200,73,61,0.12); }
@@ -157,11 +128,28 @@
     background: linear-gradient(135deg, #2d7a3e 0%, #3a9c4e 100%);
     color: #fff; border: none; border-radius: 12px;
     font-size: 1.05rem; font-weight: 700;
-    margin-top: 8px; margin-bottom: 24px; cursor: pointer;
+    margin-top: 8px; margin-bottom: 12px; cursor: pointer;
     box-shadow: 0 4px 12px rgba(45, 122, 62, 0.25);
   }
   .submit-btn:active { transform: translateY(1px); }
   .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .submit-btn.danger {
+    background: #fff; color: #c8493d; border: 1.5px solid #f0c7c2;
+    box-shadow: none;
+  }
+  .submit-btn.danger:active { background: #fce8e6; }
+  .secondary-btn {
+    width: 100%; padding: 12px; background: #f3f6f2; color: #2d4a30;
+    border: 1px solid #d4dcd4; border-radius: 10px;
+    font-size: 0.95rem; font-weight: 600; margin-bottom: 24px; cursor: pointer;
+  }
+
+  .info-banner {
+    background: #eaf3eb; color: #1f5a2e;
+    border-left: 4px solid #2d7a3e;
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 0.88rem; margin-bottom: 14px;
+  }
 
   .modal {
     position: fixed; inset: 0;
@@ -202,6 +190,8 @@
   .toast.success { background: #2d7a3e; }
   .toast.error { background: #c8493d; }
 
+  .hidden { display: none !important; }
+
   @media (max-width: 360px) {
     .checkbox-group { grid-template-columns: 1fr; }
   }
@@ -210,26 +200,30 @@
 <body>
 <div class="container">
   <header>
-    <h1>농촌관광 팸투어<br>SNS 홍보글 등록</h1>
-    <p>참석해주셔서 감사합니다. SNS 게시물을 등록해주세요.</p>
+    <h1>등록 내역 조회·수정</h1>
+    <p>이름과 비밀번호를 입력하면 본인 등록 내역을 조회·수정할 수 있습니다.</p>
     <div class="header-nav">
-      <a class="header-link" href="view.html">📋 내 등록 내역 조회/수정</a>
+      <a class="header-link" href="index.html">← 신규 등록</a>
     </div>
   </header>
 
-  <section class="card">
+  <!-- 1단계: 로그인 -->
+  <section id="loginSection" class="card">
     <div class="auth-row">
-      <label class="field-label" for="participantName">이름</label>
-      <input type="text" id="participantName" placeholder="이름을 입력해주세요" autocomplete="name">
+      <label class="field-label" for="loginName">이름</label>
+      <input type="text" id="loginName" placeholder="등록 시 입력한 이름" autocomplete="name">
     </div>
     <div class="auth-row">
-      <label class="field-label" for="participantPassword">비밀번호</label>
-      <input type="password" id="participantPassword" placeholder="조회/수정 시 사용할 비밀번호" autocomplete="new-password">
+      <label class="field-label" for="loginPassword">비밀번호</label>
+      <input type="password" id="loginPassword" placeholder="등록 시 설정한 비밀번호" autocomplete="current-password">
     </div>
-    <p class="auth-hint">※ 비밀번호는 나중에 본인 등록 내역을 조회·수정할 때 사용합니다. 4자 이상 권장.</p>
+    <button id="lookupBtn" class="submit-btn" type="button">조회하기</button>
   </section>
 
-  <section class="card">
+  <!-- 2단계: 편집 (조회 성공 시 표시) -->
+  <section id="editSection" class="card hidden">
+    <div class="info-banner" id="loggedInBanner"></div>
+
     <label class="field-label">SNS 게시물</label>
     <div class="add-controls">
       <label for="addCount">추가 갯수</label>
@@ -237,14 +231,17 @@
       <button id="addBtn" type="button">+ 입력항 추가</button>
     </div>
     <div id="urlList"></div>
-  </section>
 
-  <button id="submitBtn" class="submit-btn" type="button">제출하기</button>
+    <button id="saveBtn" class="submit-btn" type="button">수정 저장</button>
+    <button id="deleteAllBtn" class="submit-btn danger" type="button">전체 등록 내역 삭제</button>
+    <button id="logoutBtn" class="secondary-btn" type="button">로그아웃</button>
+  </section>
 </div>
 
+<!-- 카드 삭제 확인 모달 -->
 <div id="confirmModal" class="modal hidden">
   <div class="modal-content">
-    <p>입력된 값이 있습니다.<br>삭제하시겠습니까?</p>
+    <p id="confirmMessage">입력된 값이 있습니다.<br>삭제하시겠습니까?</p>
     <div class="modal-buttons">
       <button id="confirmYes" class="btn-yes" type="button">예</button>
       <button id="confirmNo" class="btn-no" type="button">아니오</button>
@@ -256,14 +253,11 @@
 
 <script>
   // ========================================================================
-  // 설정: 배포한 Google Apps Script 웹앱 URL.
-  //   - 설정되어 있으면 항상 Google Sheets 로 직접 저장 (로컬·운영 동일).
-  //   - 빈 문자열이면 로컬 테스트 서버의 /submit 으로 폴백.
+  // 설정: index.html 과 동일한 백엔드를 사용합니다.
   // ========================================================================
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxhA2CY3Ort09kDEu0lXxluUsMWPcSj8rWmCshuEMiZ-N_LuSPgkwqIRHkLh_53OYT_/exec";
   const SUBMIT_URL = APPS_SCRIPT_URL || "/submit";
 
-  // SNS URL 검증용 정규식
   const URL_REGEX = /^https?:\/\/(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}(?::\d+)?(?:[/?#].*)?$/i;
 
   const CONTENT_CATEGORIES = [
@@ -278,9 +272,12 @@
   ];
 
   let rowSeq = 0;
+  // 로그인한 사용자 정보 (조회 성공 시 보관 → 수정 저장 시 재사용)
+  let session = { name: "", password: "" };
+
   const urlList = document.getElementById("urlList");
 
-  function createUrlCard() {
+  function createUrlCard(prefill) {
     const idx = ++rowSeq;
     const card = document.createElement("div");
     card.className = "url-card";
@@ -303,7 +300,14 @@
     urlInput.className = "url-input";
     urlInput.placeholder = "SNS URL (예: https://...)";
     urlInput.inputMode = "url";
+    if (prefill && prefill.url) urlInput.value = prefill.url;
     urlInput.addEventListener("input", () => urlInput.classList.remove("invalid"));
+
+    // 선택된 컨텐츠를 빠르게 검색하기 위한 Set
+    const selectedSet = new Set();
+    if (prefill && Array.isArray(prefill.contents)) {
+      prefill.contents.forEach(c => selectedSet.add(c.category + "||" + c.item));
+    }
 
     const contentWrap = document.createElement("div");
     CONTENT_CATEGORIES.forEach(cat => {
@@ -329,12 +333,14 @@
         cb.type = "checkbox";
         cb.value = item;
         cb.dataset.category = cat.name;
+        if (selectedSet.has(cat.name + "||" + item)) cb.checked = true;
         cb.addEventListener("change", () => updateBadge(det));
         lbl.append(cb, document.createTextNode(" " + item));
         group.appendChild(lbl);
       });
       det.append(summary, group);
       contentWrap.appendChild(det);
+      updateBadge(det);
     });
 
     card.append(header, urlInput, contentWrap);
@@ -354,11 +360,9 @@
     return !!card.querySelector("input[type=checkbox]:checked");
   }
 
-  // ---- 잘못된 입력으로 포커스 + 스크롤 이동 ----
-  function focusInvalid(el, opts = {}) {
+  function focusInvalid(el) {
     if (!el) return;
     if (el.classList) el.classList.add("invalid");
-    // 카드라면 카드 자체도 강조
     const card = el.closest && el.closest(".url-card");
     if (card) card.classList.add("invalid");
     const rect = el.getBoundingClientRect();
@@ -375,13 +379,29 @@
     document.querySelectorAll(".invalid").forEach(el => el.classList.remove("invalid"));
   }
 
-  // ---- 삭제 확인 모달 ----
+  // ---- 확인 모달 (예/아니오) ----
   const modal = document.getElementById("confirmModal");
-  let pendingDeleteCard = null;
+  const modalMsg = document.getElementById("confirmMessage");
+  let pendingAction = null;
+  function showConfirm(message, onYes) {
+    modalMsg.innerHTML = message;
+    pendingAction = onYes;
+    modal.classList.remove("hidden");
+  }
+  document.getElementById("confirmYes").addEventListener("click", () => {
+    const fn = pendingAction; pendingAction = null;
+    modal.classList.add("hidden");
+    if (fn) fn();
+  });
+  document.getElementById("confirmNo").addEventListener("click", () => {
+    pendingAction = null;
+    modal.classList.add("hidden");
+  });
+
+  // ---- 카드 삭제 ----
   function handleDelete(card) {
     if (cardHasData(card)) {
-      pendingDeleteCard = card;
-      modal.classList.remove("hidden");
+      showConfirm("입력된 값이 있습니다.<br>삭제하시겠습니까?", () => removeCard(card));
     } else {
       removeCard(card);
     }
@@ -392,15 +412,6 @@
       c.querySelector(".url-card-title").textContent = `SNS 게시물 #${i + 1}`;
     });
   }
-  document.getElementById("confirmYes").addEventListener("click", () => {
-    if (pendingDeleteCard) removeCard(pendingDeleteCard);
-    pendingDeleteCard = null;
-    modal.classList.add("hidden");
-  });
-  document.getElementById("confirmNo").addEventListener("click", () => {
-    pendingDeleteCard = null;
-    modal.classList.add("hidden");
-  });
 
   // ---- 추가 버튼 ----
   document.getElementById("addBtn").addEventListener("click", () => {
@@ -414,9 +425,6 @@
     if (lastCard) lastCard.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
-  // 초기 1개 행
-  urlList.appendChild(createUrlCard());
-
   // ---- 토스트 ----
   const toast = document.getElementById("toast");
   let toastTimer;
@@ -427,105 +435,146 @@
     toastTimer = setTimeout(() => toast.classList.remove("show"), 2800);
   }
 
-  // ---- 제출 ----
-  document.getElementById("submitBtn").addEventListener("click", async () => {
+  // ---- 로그인 / 조회 ----
+  document.getElementById("lookupBtn").addEventListener("click", async () => {
     clearInvalidMarks();
-
-    const nameEl = document.getElementById("participantName");
-    const pwEl = document.getElementById("participantPassword");
+    const nameEl = document.getElementById("loginName");
+    const pwEl = document.getElementById("loginPassword");
     const name = nameEl.value.trim();
     const password = pwEl.value;
 
-    if (!name) {
-      showToast("이름을 입력해주세요.", "error");
-      focusInvalid(nameEl);
-      return;
-    }
-    if (!password) {
-      showToast("비밀번호를 입력해주세요.", "error");
-      focusInvalid(pwEl);
-      return;
-    }
-    if (password.length < 4) {
-      showToast("비밀번호는 4자 이상 입력해주세요.", "error");
-      focusInvalid(pwEl);
-      return;
-    }
+    if (!name) { showToast("이름을 입력해주세요.", "error"); focusInvalid(nameEl); return; }
+    if (!password) { showToast("비밀번호를 입력해주세요.", "error"); focusInvalid(pwEl); return; }
 
+    const btn = document.getElementById("lookupBtn");
+    btn.disabled = true; btn.textContent = "조회 중...";
+    try {
+      const res = await fetch(SUBMIT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "lookup", name, password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        session.name = name;
+        session.password = password;
+        loadIntoEditor(name, data.urls || []);
+      } else {
+        showToast(data.error || "조회 실패", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("오류: " + err.message, "error");
+    } finally {
+      btn.disabled = false; btn.textContent = "조회하기";
+    }
+  });
+
+  function loadIntoEditor(name, urls) {
+    document.getElementById("loggedInBanner").textContent =
+      `${name} 님의 등록 내역 ${urls.length}건을 불러왔습니다. 수정 후 [수정 저장] 을 눌러주세요.`;
+    urlList.innerHTML = "";
+    rowSeq = 0;
+    if (urls.length === 0) {
+      urlList.appendChild(createUrlCard());
+    } else {
+      urls.forEach(u => urlList.appendChild(createUrlCard(u)));
+    }
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("editSection").classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // ---- 로그아웃 ----
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    session = { name: "", password: "" };
+    document.getElementById("loginName").value = "";
+    document.getElementById("loginPassword").value = "";
+    urlList.innerHTML = "";
+    rowSeq = 0;
+    document.getElementById("editSection").classList.add("hidden");
+    document.getElementById("loginSection").classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // ---- 수정 저장 ----
+  document.getElementById("saveBtn").addEventListener("click", async () => {
+    clearInvalidMarks();
     const cards = Array.from(document.querySelectorAll(".url-card"));
-    if (cards.length === 0) {
-      showToast("게시물을 1개 이상 추가해주세요.", "error");
-      return;
-    }
-
     const urls = [];
     for (const card of cards) {
       const urlInput = card.querySelector(".url-input");
       const url = urlInput.value.trim();
       const checked = card.querySelectorAll("input[type=checkbox]:checked");
-      if (!url && checked.length === 0) continue; // 빈 카드는 무시
-      if (!url) {
-        showToast("URL을 입력해주세요.", "error");
-        focusInvalid(urlInput);
-        return;
-      }
-      if (!URL_REGEX.test(url)) {
-        showToast("SNS URL을 정확히 입력하세요.", "error");
-        focusInvalid(urlInput);
-        return;
-      }
-      if (checked.length === 0) {
-        showToast("노출된 컨텐츠를 1개 이상 선택해주세요.", "error");
-        focusInvalid(urlInput);
-        return;
-      }
-      const contents = Array.from(checked).map(cb => ({
-        category: cb.dataset.category, item: cb.value
-      }));
+      if (!url && checked.length === 0) continue;
+      if (!url) { showToast("URL을 입력해주세요.", "error"); focusInvalid(urlInput); return; }
+      if (!URL_REGEX.test(url)) { showToast("SNS URL을 정확히 입력하세요.", "error"); focusInvalid(urlInput); return; }
+      if (checked.length === 0) { showToast("노출된 컨텐츠를 1개 이상 선택해주세요.", "error"); focusInvalid(urlInput); return; }
+      const contents = Array.from(checked).map(cb => ({ category: cb.dataset.category, item: cb.value }));
       urls.push({ url, contents });
     }
-    if (urls.length === 0) { showToast("입력된 게시물이 없습니다.", "error"); return; }
-
-    if (!SUBMIT_URL) {
-      showToast("APPS_SCRIPT_URL 이 설정되지 않았습니다.", "error");
-      console.warn("입력 데이터:", { name, password, urls });
+    if (urls.length === 0) {
+      showConfirm("저장할 게시물이 없습니다.<br>전체 등록 내역을 삭제하시겠습니까?", () => sendUpdate([]));
       return;
     }
+    sendUpdate(urls);
+  });
 
-    const submitBtn = document.getElementById("submitBtn");
-    submitBtn.disabled = true;
-    submitBtn.textContent = "전송 중...";
-
+  async function sendUpdate(urls) {
+    const btn = document.getElementById("saveBtn");
+    btn.disabled = true; btn.textContent = "저장 중...";
     try {
       const res = await fetch(SUBMIT_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action: "submit", name, password, urls })
+        body: JSON.stringify({
+          action: "update",
+          name: session.name,
+          password: session.password,
+          urls
+        })
       });
       const data = await res.json();
       if (data.success) {
-        showToast(`등록 완료! (${data.count}건 저장됨)`, "success");
-        resetForm();
+        showToast(`저장 완료! (삭제 ${data.deleted}건 / 등록 ${data.inserted}건)`, "success");
+        // 다시 조회해서 최신 상태 반영
+        setTimeout(() => reloadCurrent(), 600);
       } else {
         throw new Error(data.error || "알 수 없는 오류");
       }
     } catch (err) {
       console.error(err);
-      showToast("전송 실패: " + err.message, "error");
+      showToast("저장 실패: " + err.message, "error");
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "제출하기";
+      btn.disabled = false; btn.textContent = "수정 저장";
     }
-  });
-
-  function resetForm() {
-    document.getElementById("participantName").value = "";
-    document.getElementById("participantPassword").value = "";
-    urlList.innerHTML = "";
-    rowSeq = 0;
-    urlList.appendChild(createUrlCard());
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
+  async function reloadCurrent() {
+    try {
+      const res = await fetch(SUBMIT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "lookup", name: session.name, password: session.password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        loadIntoEditor(session.name, data.urls || []);
+      } else {
+        // 데이터가 모두 삭제됐다 → 로그아웃 처리
+        document.getElementById("logoutBtn").click();
+        showToast("등록 내역이 모두 삭제되었습니다.", "success");
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  // ---- 전체 삭제 ----
+  document.getElementById("deleteAllBtn").addEventListener("click", () => {
+    showConfirm(
+      `${session.name} 님의<br>등록 내역 전체를 삭제하시겠습니까?<br>이 작업은 되돌릴 수 없습니다.`,
+      () => sendUpdate([])
+    );
+  });
 </script>
 </body>
 </html>
