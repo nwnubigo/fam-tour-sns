@@ -325,6 +325,13 @@
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxhA2CY3Ort09kDEu0lXxluUsMWPcSj8rWmCshuEMiZ-N_LuSPgkwqIRHkLh_53OYT_/exec";
   const SUBMIT_URL = APPS_SCRIPT_URL || "/submit";
 
+  // SNS URL 검증용 정규식
+  //   - http:// 또는 https:// 로 시작
+  //   - 1개 이상의 (도메인.도메인) 형태 (예: instagram.com, m.blog.naver.com)
+  //   - 최상위 도메인은 영문 2자 이상
+  //   - 이후 포트/경로/쿼리/프래그먼트 자유
+  const URL_REGEX = /^https?:\/\/(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}(?::\d+)?(?:[/?#].*)?$/i;
+
   const CONTENT_CATEGORIES = [
     {
       name: "저녁 바베큐파티",
@@ -491,6 +498,13 @@
       const checked = card.querySelectorAll("input[type=checkbox]:checked");
       if (!url && checked.length === 0) continue; // 빈 카드는 무시
       if (!url) { showToast("URL을 입력해주세요.", "error"); card.querySelector(".url-input").focus(); return; }
+      if (!URL_REGEX.test(url)) {
+        showToast("SNS URL을 정확히 입력하세요.", "error");
+        const input = card.querySelector(".url-input");
+        input.focus();
+        input.select();
+        return;
+      }
       if (checked.length === 0) { showToast("노출된 컨텐츠를 1개 이상 선택해주세요.", "error"); return; }
       const contents = Array.from(checked).map(cb => ({
         category: cb.dataset.category,
