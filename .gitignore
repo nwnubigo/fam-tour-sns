@@ -1,0 +1,8 @@
+# 로컬 테스트 데이터 (Google Sheets 가 운영 저장소이므로 커밋 불필요)
+data.csv
+
+# 로그/임시
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
